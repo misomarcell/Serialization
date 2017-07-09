@@ -10,6 +10,10 @@ namespace Exercise1
     {
         static void Main(string[] args)
         {
+            Person p1 = new Person("Tony", 23, Person.Sex.Male);
+            Person.Serialize(p1);
+
+            Console.ReadKey();
         }
     }
 }

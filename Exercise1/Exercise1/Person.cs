@@ -5,7 +5,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace Exercise1
 {
     [Serializable]
-    class Person : IDeserializationCallback
+    class Person : IDeserializationCallback, ISerializable
     {
         public enum Sex : int { Male, Female}
         private string name { get; set; }
@@ -14,6 +14,17 @@ namespace Exercise1
         private Sex sex { get; set; }
 
         public Person() {}
+
+        public Person(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Name", name);
+            info.AddValue("Born", born);
+
+            name = info.GetString("Name");
+            born = info.GetInt16("Born");
+            CalculateAge();
+        }
+
         public Person(string _name, int _born, Sex _sex)
         {
             name = _name;
@@ -71,5 +82,7 @@ namespace Exercise1
         {
             age = DateTime.Now.Year - born;
         }
+
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context) {}
     }
 }

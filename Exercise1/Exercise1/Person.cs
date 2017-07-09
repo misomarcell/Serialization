@@ -1,22 +1,25 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 namespace Exercise1
 {
     [Serializable]
-    class Person
+    class Person : IDeserializationCallback
     {
         public enum Sex : int { Male, Female}
         private string name { get; set; }
-        private int age { get; set; }
+        [NonSerialized] private int age;
+        private int born { get; set; }
         private Sex sex { get; set; }
 
         public Person() {}
-        public Person(string _name, int _age, Sex _sex)
+        public Person(string _name, int _born, Sex _sex)
         {
             name = _name;
-            age = _age;
+            born = _born;
             sex = _sex;
+            CalculateAge();
         }
 
         public static void Serialize(Person sp)
@@ -58,5 +61,15 @@ namespace Exercise1
         {
             return name + "; " + age + "; " + sex;
         }
-    }   
+
+        void IDeserializationCallback.OnDeserialization(Object sender)
+        {
+            CalculateAge();
+        }
+
+        private void CalculateAge()
+        {
+            age = DateTime.Now.Year - born;
+        }
+    }
 }
